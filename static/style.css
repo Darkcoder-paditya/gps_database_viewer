@@ -1,0 +1,101 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f5f5f5;
+    margin: 0;
+    padding: 20px;
+}
+
+h1 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #fff;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+}
+
+th, td {
+    padding: 12px 15px;
+    text-align: center;
+    border-bottom: 1px solid #ddd;
+}
+
+th {
+    background-color: #f8f8f8;
+    font-weight: bold;
+    text-decoration: underline;
+}
+
+tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+tr:hover {
+    background-color: #e0e0e0;
+}
+
+.sort-button {
+    background-color: #4CAF50;
+    color: #fff;
+    border: none;
+    padding: 8px 16px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 14px;
+    margin-bottom: 10px;
+    cursor: pointer;
+}
+.delete-button {
+    background-color: red;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  
+  .delete-button:hover {
+    background-color: darkred;
+  }
+  
+  .delete-button:focus {
+    outline: none;
+  }
+  
+  .delete-button:active {
+    transform: translateY(1px);
+  }
+  .buttons{
+    align-items: center;
+  }
+
+/* */
+  .button-container {
+    text-align: center;
+}
+/**/
+.button-box {
+    display: inline-block;
+    border: 1px solid #ccc;
+    padding: 10px;
+    border-radius: 5px;
+}
+/* */
+/* .button-box button { */
+    /* margin-right: 10px; */
+    /* padding: 5px 10px; */
+    /* border: 1px solid #ccc; */
+    /* border-radius: 3px; */
+    /* background-color: #f1f1f1; */
+/* }  */
+/*  */
+
+.sort-button.clicked {
+    background-color: rgb(68, 0, 255);
+}

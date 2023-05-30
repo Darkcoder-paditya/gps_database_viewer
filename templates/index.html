@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>GPS Data</title>
+    <link rel="stylesheet" type="text/css" href="../static/style.css">
+</head>
+<body>
+    <h1>GPS Data</h1>
+    <div class="button-container">
+        <div class="button-box">
+        <button class="sort-button" onclick="sortDataBySerialNumber()">Reset</button>
+        <button class="sort-button" onclick="sortDataByTemperature()">Sort by Temperature</button>
+        <button class="sort-button" onclick="sortDataByLatitude()">Sort by Latitude</button>
+        <button class="sort-button" onclick="sortDataByLongitude()">Sort by Longitude</button>
+        <button class="delete-button" onclick="deleteData()">Delete All Data</button>
+        </div>
+    </div>
+    <!-- <div class="auto-refresh-container">
+        <label for="toggle-switch">Auto Refresh:</label>
+        <label class="switch">
+            <input type="checkbox" id="toggle-switch" onchange="toggleAutoRefresh()">
+            <span class="slider"></span>
+        </label>
+        <label for="interval-input">Interval (seconds):</label>
+        <input type="number" id="interval-input" min="1">
+        <button onclick="toggleAutoRefresh()">Submit</button>
+    </div> -->
+    <br>
+    <table id="data-table">
+        <thead>
+            <tr>
+                <th>Serial Number</th>
+                <th>Topic</th>
+                <th>Temperature</th>
+                <th>Latitude</th>
+                <th>Longitude</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for document in data %}
+            <tr>
+                <td>{{ document.serial_number }}</td>
+                <td>{{ document.topic }}</td>
+                <td>{{ document.temperature }}</td>
+                <td>{{ document.latitude }}</td>
+                <td>{{ document.longitude }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <script src="../static/script.js"></script>
+</body>
+</html>
