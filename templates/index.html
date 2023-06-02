@@ -35,7 +35,7 @@
         <thead>
             <tr>
                 <th>Sr No.</th>
-                <th>Data ID</th>
+                <!-- <th>Data ID</th> -->
                 <th>Robot ID</th>
                 <th>Topic</th>
                 <th>Temperature</th>
@@ -47,8 +47,8 @@
             {% for document in data %}
                 <tr>
                     <td>{{ document.serial_number }}</td>
-                    <td>{{ document._id }}</td>
-                    <td>{{ document.robid }}</td>
+                    <!-- <td>{{ document._id }}</td> -->
+                    <td>{{ document.robot_id }}</td>
                     <td>{{ document.topic }}</td>
                     <td>{{ document.temperature }}</td>
                     <td>{{ document.latitude }}</td>

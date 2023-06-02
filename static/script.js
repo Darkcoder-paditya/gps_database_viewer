@@ -4,8 +4,8 @@ function sortDataByTemperature() {
     var rows = Array.from(table.getElementsByTagName("tr"));
 
     rows.sort(function(a, b) {
-        var aValue = parseFloat(a.cells[4].innerText);
-        var bValue = parseFloat(b.cells[4].innerText);
+        var aValue = parseFloat(a.cells[3].innerText);
+        var bValue = parseFloat(b.cells[3].innerText);
 
         if (isNaN(aValue) || isNaN(bValue)) {
             return 0;
@@ -25,8 +25,8 @@ function sortDataByLatitude() {
     var rows = Array.from(table.getElementsByTagName("tr"));
 
     rows.sort(function(a, b) {
-        var aValue = parseFloat(a.cells[5].innerText);
-        var bValue = parseFloat(b.cells[5].innerText);
+        var aValue = parseFloat(a.cells[4].innerText);
+        var bValue = parseFloat(b.cells[4].innerText);
 
         if (isNaN(aValue) || isNaN(bValue)) {
             return 0;
@@ -46,8 +46,8 @@ function sortDataByLongitude() {
     var rows = Array.from(table.getElementsByTagName("tr"));
 
     rows.sort(function(a, b) {
-        var aValue = parseFloat(a.cells[6].innerText);
-        var bValue = parseFloat(b.cells[6].innerText);
+        var aValue = parseFloat(a.cells[5].innerText);
+        var bValue = parseFloat(b.cells[5].innerText);
 
         if (isNaN(aValue) || isNaN(bValue)) {
             return 0;
