@@ -1,7 +1,8 @@
+import multiprocessing, subprocess, requests
 from flask import Flask, render_template, jsonify, request
 from pymongo import MongoClient
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder='static')
 
 # MongoDB configuration
 MONGO_HOST = 'mongodb+srv://pa:prashant@cluster0.5b0djvj.mongodb.net/'
@@ -25,10 +26,28 @@ def delete_data():
     except Exception as e:
         return jsonify({'message': 'Failed to delete data', 'error': str(e)}), 500
 
+
+
 @app.route('/')
-def display_data():
-    data = collection.find()
+@app.route('/<robot_ids>')
+def display_data_route(robot_ids=None):
+    if robot_ids:
+        robot_id_list = robot_ids.split(',')
+        data = collection.find({'robid': {'$in': robot_id_list}})
+    else:
+        data = collection.find()
     return render_template('./index.html', data=data)
 
+
+
+def run_subscriber():
+    subprocess.run(['python', './subscribe.py'])
+
 if __name__ == '__main__':
-    app.run()
+    subscriber_process = multiprocessing.Process(target=run_subscriber)
+    subscriber_process.start()
+    app.run(debug=True)
+
+    subscriber_process.join()
+
+    
