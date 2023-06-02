@@ -1,5 +1,8 @@
-import multiprocessing, subprocess, requests
-from flask import Flask, render_template, jsonify, request
+
+    
+    # app.py
+import multiprocessing, subprocess
+from flask import Flask, render_template, jsonify
 from pymongo import MongoClient
 
 app = Flask(__name__, static_folder='static')
@@ -36,8 +39,8 @@ def display_data_route(robot_ids=None):
         data = collection.find({'robid': {'$in': robot_id_list}})
     else:
         data = collection.find()
+    
     return render_template('./index.html', data=data)
-
 
 
 def run_subscriber():
@@ -46,8 +49,7 @@ def run_subscriber():
 if __name__ == '__main__':
     subscriber_process = multiprocessing.Process(target=run_subscriber)
     subscriber_process.start()
-    app.run(debug=True)
-
+    app.run()
+    
     subscriber_process.join()
-
     

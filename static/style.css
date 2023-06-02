@@ -1,115 +1,153 @@
 body {
-    font-family: Arial, sans-serif;
-    background-color: #e0e0e0;
-    margin: 0;
-    padding: 20px;
+  font-family: Arial, sans-serif;
+  background-color: #e0e0e0;
+  margin: 0;
+  padding: 20px;
 }
 
 h1 {
-    text-align: center;
-    color: #333;
-    margin-bottom: 20px;
+  text-align: center;
+  color: #333;
+  margin-bottom: 20px;
 }
 
 table {
-    width: 100%;
-    border-collapse: collapse;
-    background-color: #fff;
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  border-collapse: collapse;
+  background-color: #fff;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
 }
 
 th, td {
-    padding: 12px 15px;
-    text-align: center;
-    border-bottom: 1px solid #ddd;
+  padding: 12px 15px;
+  text-align: center;
+  border-bottom: 1px solid #ddd;
 }
 
 th {
-    background-color: #f8f8f8;
-    font-weight: bold;
-    text-decoration: underline;
+  background-color: #f8f8f8;
+  font-weight: bold;
+  text-decoration: underline;
 }
 
 tr:nth-child(even) {
-    background-color: #f2f2f2;
+  background-color: #f2f2f2;
 }
 
 tr:hover {
-    background-color: #e0e0e0;
+  background-color: #e0e0e0;
 }
 
 .sort-button {
-    background-color: #4CAF50;
-    color: #fff;
-    border: none;
-    padding: 8px 16px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 14px;
-    margin-bottom: 10px;
-    cursor: pointer;
+  background-color: #4CAF50;
+  color: #fff;
+  border: none;
+  padding: 8px 16px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 14px;
+  margin-bottom: 10px;
+  cursor: pointer;
 }
 .delete-button {
-    background-color: red;
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    font-size: 16px;
-    cursor: pointer;
-  }
-  
-  .delete-button:hover {
-    background-color: darkred;
-  }
-  
-  .delete-button:focus {
-    outline: none;
-  }
-  
-  .delete-button:active {
-    transform: translateY(1px);
-  }
-  .buttons{
-    align-items: center;
-  }
+  background-color: red;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.delete-button:hover {
+  background-color: darkred;
+}
+
+.delete-button:focus {
+  outline: none;
+}
+
+.delete-button:active {
+  transform: translateY(1px);
+}
+.buttons{
+  align-items: center;
+}
 
 /* */
-  .button-container {
-    text-align: center;
+.button-container {
+  text-align: center;
 }
 /**/
 .button-box {
-    display: inline-block;
-    border: 1px solid #ccc;
-    padding: 10px;
-    border-radius: 5px;
+  display: inline-block;
+  border: 1px solid #ccc;
+  padding: 10px;
+  border-radius: 5px;
 }
 /* */
 /* .button-box button { */
-    /* margin-right: 10px; */
-    /* padding: 5px 10px; */
-    /* border: 1px solid #ccc; */
-    /* border-radius: 3px; */
-    /* background-color: #f1f1f1; */
+  /* margin-right: 10px; */
+  /* padding: 5px 10px; */
+  /* border: 1px solid #ccc; */
+  /* border-radius: 3px; */
+  /* background-color: #f1f1f1; */
 /* }  */
 /*  */
 
 .sort-button.clicked {
-    background-color: rgb(68, 0, 255);
+  background-color: rgb(68, 0, 255);
 }
 .save-button {
-  background-color: #00797f;
-  
-  color: white;
-  padding: 8px 16px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  margin-left: 10px;
+background-color: #00797f;
+
+color: white;
+padding: 8px 16px;
+border: none;
+border-radius: 4px;
+cursor: pointer;
+margin-left: 10px;
 }
 
 .save-button:hover {
-  background-color: #45a049;
+background-color: #45a049;
+}
+
+.filter-container {
+margin-bottom: 20px;
+}
+
+#filter-form {
+display: flex;
+align-items: center;
+}
+
+#robot-id-input {
+margin-right: 10px;
+padding: 5px;
+}
+
+#robot-id-input::placeholder {
+color: #999;
+}
+
+#filter-form button[type="submit"],
+#reset-button {
+padding: 8px 16px;
+background-color: #007bff;
+color: #fff;
+border: none;
+cursor: pointer;
+}
+
+#reset-button {
+background-color: #dc3545;
+margin-left: 10px;
+}
+.empty-data-message {
+  text-align: center;
+  font-size: 16px;
+  color: #999;
+  margin: 20px 0;
 }

@@ -6,18 +6,12 @@
 </head>
 <body>
     <h1>GPS Data</h1>
-    <div class="filter-container">
-        <form id="filter-form" action="/">
-            <input type="text" id="robot-id-input" placeholder="Enter Robot IDs">
-            <button type="submit">Filter</button>
-            <button type="button" id="reset-button">Reset</button>
-        </form>
-    </div>
-    
+
+    <!-- buttons to sort values -->
     <div class="button-container">
         <div class="button-box">
         <button class="sort-button" onclick="sortDataBySerialNumber()">Reset</button>
-        <button class="sort-button" onclick="sortDataByLatitude()">Sort by Temperature</button>
+        <button class="sort-button" onclick="sortDataByTemperature()">Sort by Temperature</button>
         <button class="sort-button" onclick="sortDataByLatitude()">Sort by Latitude</button>
         <button class="sort-button" onclick="sortDataByLongitude()">Sort by Longitude</button>
         <!-- <button class="delete-button" onclick="deleteData()">Delete All Data</button> -->
@@ -25,39 +19,48 @@
         </div>
     </div>
 
+    <!-- filter things -->
+    <div class="filter-container">
+        <form id="filter-form" action="/">
+            <input type="text" id="robot-id-input" placeholder="Enter Robot IDs">
+            <button type="submit">Filter</button>
+            <button type="button" id="reset-button">Reset</button>
+        </form>
+    </div>
+
     <br>
+
+    
     <table id="data-table">
         <thead>
             <tr>
-                
                 <th>Sr No.</th>
                 <th>Robot ID</th>
                 <th>Topic</th>
                 <th>Temperature</th>
                 <th>Latitude</th>
                 <th>Longitude</th>
-                
             </tr>
         </thead>
         <tbody>
             {% for document in data %}
-            <tr>
-                
-                <td>{{ document.serial_number }}</td>
-                <td>{{ document.robid }}</td>
-                <td>{{ document.topic }}</td>
-                <td>{{ document.temperature }}</td>
-                <td>{{ document.latitude }}</td>
-                <td>{{ document.longitude }}</td>
-                
-            </tr>
+                <tr>
+                    <td>{{ document.serial_number }}</td>
+                    <td>{{ document.robid }}</td>
+                    <td>{{ document.topic }}</td>
+                    <td>{{ document.temperature }}</td>
+                    <td>{{ document.latitude }}</td>
+                    <td>{{ document.longitude }}</td>
+                </tr>
             {% endfor %}
         </tbody>
     </table>
+
     <br>
     <div class="button-container">
         <div class="button-box">
             <button class="delete-button" onclick="deleteData()">Delete All Data</button>
+            <button class="delete-button" onclick="deletespData()">Delete only displayed data</button>
         </div>
     </div>
     <script src="../static/script.js"></script>
