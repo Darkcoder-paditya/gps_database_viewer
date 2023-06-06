@@ -125,34 +125,29 @@ function deleteData() {
 //     }
 // }
 function saveDataAsCSV() {
-    // Retrieve the table element
+    
     var table = document.getElementById('data-table');
-
-    // Create an empty CSV string
-    var csv = '';
-
-    // Iterate over table rows
-    for (var i = 0; i < table.rows.length; i++) {
+    var csv = 'Sr No.,Robot ID,Topic,Temperature,Latitude,Longitude';
+    csv += '\n';
+    for (var i = 1; i < table.rows.length; i++) {
         var row = table.rows[i];
 
-        // Iterate over row cells
+    
         for (var j = 0; j < row.cells.length; j++) {
             var cell = row.cells[j];
-
-            // Append cell value to CSV with comma separator
             csv += cell.innerText + ',';
         }
 
-        // Add newline character after each row
+    
         csv += '\n';
     }
 
-    // Create a temporary element to hold the CSV data
+    
     var element = document.createElement('a');
     element.setAttribute('href', 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv));
     element.setAttribute('download', 'gps_data.csv');
 
-    // Simulate a click to trigger the download
+    
     element.style.display = 'none';
     document.body.appendChild(element);
     element.click();
@@ -190,3 +185,13 @@ document.addEventListener('DOMContentLoaded', () => {
         window.location.href = url;
     }
 });
+// function plotGraphs() {
+//     // Make an AJAX request to the server to trigger the graph plotting
+
+//     const url = '/plot';
+//     window.location.href = url;
+//     var xhr = new XMLHttpRequest();
+//     xhr.open('GET', '/plot', true);
+//     xhr.send();
+// }
+

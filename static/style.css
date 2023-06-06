@@ -27,7 +27,7 @@ th, td {
 th {
   background-color: #f8f8f8;
   font-weight: bold;
-  text-decoration: underline;
+  
 }
 
 tr:nth-child(even) {
@@ -150,4 +150,73 @@ margin-left: 10px;
   font-size: 16px;
   color: #999;
   margin: 20px 0;
+}
+
+
+
+.arrow-up {
+  display: none;
+}
+
+.arrow-down {
+  display: none;
+}
+
+.sort-button:focus .arrow-up {
+  display: inline;
+}
+
+.sort-button:focus .arrow-down {
+  display: none;
+}
+
+.sort-button.active .arrow-up {
+  display: none;
+}
+
+.sort-button.active .arrow-down {
+  display: inline;
+}
+
+
+
+.column-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.column-header-text {
+  margin-right: 5px;
+  text-decoration: underline;
+}
+
+.upside-down-arrow-button {
+  font-weight: bold;
+  width: 20px;
+  height: 20px;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.icon-button {
+  /* ... other styles ... */
+  display: inline-block;
+  width: 30px;
+  height: 30px;
+  background-image: url("../arrowicons/arrow.png");
+  background-size: contain;
+  border: 1px solid #ccc;
+  border-radius: 50%;
+  padding: 5px;
+  transition: background-color 0.3s ease;
+}
+
+.icon-button:hover {
+  background-color: #f0f0f0;
 }

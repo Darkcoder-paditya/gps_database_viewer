@@ -29,19 +29,41 @@ MYSQL_PASSWORD = 'root'
 mongo_client = MongoClient(MONGO_HOST, MONGO_PORT, username=USERNAME, password=PASSWORD)
 db = mongo_client[MONGO_DB]
 collection = db[COLLECTION_NAME]
-
-# Connect to MySQL
+    
 
 
 @app.route('/delete', methods=['DELETE'])
 def delete_data():
     try:
+        mysql_connection = mysql.connector.connect(
+            host=MYSQL_HOST,
+            port=MYSQL_PORT,
+            user=MYSQL_USER,
+            password=MYSQL_PASSWORD,
+            database=MYSQL_DB
+        )    
+        mysql_cursor = mysql_connection.cursor()
+        mysql_cursor.execute("DELETE FROM gps_data")
+        mysql_connection.commit()
+        mysql_cursor.close()
+        mysql_connection.close()
+        
+        # Check if the deletion was successful in MySQL
+        if mysql_cursor.rowcount > 0:
+            print("Data deleted from MySQL")
+        else:
+            print("No data deleted from MySQL")
+
+
         result = collection.delete_many({})
         deleted_count = result.deleted_count
         return jsonify({'message': 'Data deleted successfully', 'deleted_count': deleted_count}), 200
     except Exception as e:
         return jsonify({'message': 'Failed to delete data', 'error': str(e)}), 500
-
+    
+# @app.route('/graphs')
+# def display_graphs():
+#     return render_template('graphs.html')
 # 
 @app.route('/')
 @app.route('/<robot_ids>')
@@ -54,24 +76,24 @@ def display_data_route(robot_ids=None):
     database=MYSQL_DB
     )
     mysql_cursor = mysql_connection.cursor()
-    if mysql_connection.is_connected():
-        print("Connected to MySQL")
-    else:
-        print("Failed to connect to MySQL")
+    # if mysql_connection.is_connected():
+    #     print("Connected to MySQL")
+    # else:
+    #     print("Failed to connect to MySQL")
     if robot_ids:
         robot_id_list = robot_ids.split(',')
 
-        # Prepare the SQL query
+        
         query = "SELECT * FROM gps_data WHERE robot_id IN (%s)" % (','.join(['%s'] * len(robot_id_list)))
 
-        # Execute the SQL query
+        
         mysql_cursor.execute(query, tuple(robot_id_list))
 
-        # Fetch the data from MySQL
+        
         columns = [column[0] for column in mysql_cursor.description]
         data = [dict(zip(columns, row)) for row in mysql_cursor.fetchall()]
     else:
-        # Fetch all data from MySQL
+        
         mysql_cursor.execute("SELECT * FROM gps_data")
         columns = [column[0] for column in mysql_cursor.description]
         data = [dict(zip(columns, row)) for row in mysql_cursor.fetchall()]

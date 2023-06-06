@@ -3,6 +3,7 @@
 <head>
     <title>GPS Data</title>
     <link rel="stylesheet" type="text/css" href="../static/style.css">
+
 </head>
 <body>
     <h1>GPS Data</h1>
@@ -10,12 +11,14 @@
     <!-- buttons to sort values -->
     <div class="button-container">
         <div class="button-box">
-        <button class="sort-button" onclick="sortDataBySerialNumber()">Reset</button>
-        <button class="sort-button" onclick="sortDataByTemperature()">Sort by Temperature</button>
-        <button class="sort-button" onclick="sortDataByLatitude()">Sort by Latitude</button>
-        <button class="sort-button" onclick="sortDataByLongitude()">Sort by Longitude</button>
-        <!-- <button class="delete-button" onclick="deleteData()">Delete All Data</button> -->
-        <button class="save-button" onclick="saveDataAsCSV()">Save as CSV</button>
+            <button class="sort-button" onclick="sortDataBySerialNumber()">Reset Sorting</button>
+            <!-- <button class="sort-button" onclick="sortDataByTemperature()">Sort by Temperature</button> -->
+            <!-- <button class="sort-button" onclick="sortDataByLatitude()">Sort by Latitude</button> -->
+            <!-- <button class="sort-button" onclick="sortDataByLongitude()">Sort by Longitude</button> -->
+            <!-- <button class="delete-button" onclick="deleteData()">Delete All Data</button> -->
+            <button class="save-button" onclick="saveDataAsCSV()">Save as CSV</button>
+            <!-- <button class="graph-button" onclick="openGraphsPage()">View Graphs</button> -->
+            <!-- <button class="plot-button" onclick="plotGraphs()">Plot Graphs</button> Added button for plotting graphs -->
         </div>
     </div>
 
@@ -30,7 +33,6 @@
 
     <br>
 
-    
     <table id="data-table">
         <thead>
             <tr>
@@ -38,15 +40,37 @@
                 <!-- <th>Data ID</th> -->
                 <th>Robot ID</th>
                 <th>Topic</th>
-                <th>Temperature</th>
-                <th>Latitude</th>
-                <th>Longitude</th>
+                <th>
+                    <div class="column-header">
+                        <span class="column-header-text">Temperature</span>
+                        <button class="upside-down-arrow-button" onclick="sortDataByTemperature()">
+                            &#x1F53C;
+                        </button>
+                    </div>
+                </th>
+                <th>
+                    <div class="column-header">
+                        <span class="column-header-text">Latitude</span>
+                        <button class="upside-down-arrow-button" onclick="sortDataByLatitude()">
+                            &#x1F53C;
+                        </button>
+                    </div>
+                </th>
+                <th>
+                    <div class="column-header">
+                        <span class="column-header-text">Longitude</span>
+                        <button class="upside-down-arrow-button" onclick="sortDataByLongitude()">
+                            &#x1F53C;
+                        </button>
+                    </div>
+                </th>
             </tr>
         </thead>
+        
         <tbody>
             {% for document in data %}
                 <tr>
-                    <td>{{ document.serial_number }}</td>
+                    <td>{{ document.id }}</td>
                     <!-- <td>{{ document._id }}</td> -->
                     <td>{{ document.robot_id }}</td>
                     <td>{{ document.topic }}</td>
