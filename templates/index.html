@@ -17,8 +17,7 @@
             <!-- <button class="sort-button" onclick="sortDataByLongitude()">Sort by Longitude</button> -->
             <!-- <button class="delete-button" onclick="deleteData()">Delete All Data</button> -->
             <button class="save-button" onclick="saveDataAsCSV()">Save as CSV</button>
-            <!-- <button class="graph-button" onclick="openGraphsPage()">View Graphs</button> -->
-            <!-- <button class="plot-button" onclick="plotGraphs()">Plot Graphs</button> Added button for plotting graphs -->
+            <a class="sort-button"  target="_blank" onclick="opengraphs()" >Open live Graph</a>
         </div>
     </div>
 
@@ -36,10 +35,10 @@
     <table id="data-table">
         <thead>
             <tr>
-                <th>Sr No.</th>
+                <th class="column-header-text">Sr No.</th>
                 <!-- <th>Data ID</th> -->
-                <th>Robot ID</th>
-                <th>Topic</th>
+                <th class="column-header-text">Robot ID</th>
+                <th class="column-header-text">Topic</th>
                 <th>
                     <div class="column-header">
                         <span class="column-header-text">Temperature</span>

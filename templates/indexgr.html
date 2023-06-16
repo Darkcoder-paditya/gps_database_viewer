@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Robot Data Plots</title>
+    <script type="text/javascript">
+        function autoRefreshPage() {
+            setTimeout(() => {
+                location.reload();
+            }, 1000);
+        }
+        
+        window.onload = autoRefreshPage;
+    </script>
+    <style>
+        .plot {
+            width: 1200px;
+            height: 400px;
+            margin-bottom: 50px;
+        }
+    </style>
+</head>
+<body>
+    <div class="plot">
+        <img src="data:image/png;base64,{{ plot_data }}" alt="Plot 1">
+    </div>
+</body>
+</html>

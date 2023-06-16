@@ -105,6 +105,10 @@ function deleteData() {
         });
     }
 }
+function opengraphs(){
+    const url = '/graphs';
+    window.location.href = url;
+}
 // setInterval(function() {
 //     location.reload();
 // }, 5000);
@@ -127,7 +131,8 @@ function deleteData() {
 function saveDataAsCSV() {
     
     var table = document.getElementById('data-table');
-    var csv = 'Sr No.,Robot ID,Topic,Temperature,Latitude,Longitude';
+    var csv='';
+     csv+= 'Sr No.,Robot ID,Topic,Temperature,Latitude,Longitude';
     csv += '\n';
     for (var i = 1; i < table.rows.length; i++) {
         var row = table.rows[i];
@@ -195,3 +200,34 @@ document.addEventListener('DOMContentLoaded', () => {
 //     xhr.send();
 // }
 
+
+
+
+// function scfisd() {
+//     var table = document.getElementById('data-table');
+//     var csv = 'Sr No.,Robot ID,Topic,Temperature,Latitude,Longitude';
+//     csv += '\n';
+    
+//     for (var i = 1; i < table.rows.length; i++) {
+//         var row = table.rows[i];
+        
+//         for (var j = 0; j < row.cells.length; j++) {
+//             var cell = row.cells[j];
+//             csv += cell.innerText + ',';
+//         }
+        
+//         csv += '\n';
+//     }
+    
+//     var blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+//     var url = URL.createObjectURL(blob);
+    
+//     var anchor = document.createElement('a');
+//     anchor.href = url;
+//     anchor.style.display = 'none';
+//     anchor.setAttribute('download', 'gps_data.csv');
+    
+//     document.body.appendChild(anchor);
+//     anchor.click();
+//     document.body.removeChild(anchor);
+// }
