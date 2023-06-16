@@ -3,6 +3,7 @@ import subprocess
 from flask import Flask, render_template, jsonify, request
 from pymongo import MongoClient
 from pymongo import TEXT
+from statistics import mean, median, mode
 import mysql.connector
 import matplotlib.pyplot as plt
 import csv
@@ -13,6 +14,9 @@ import base64
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 import numpy as np
+import plotly.graph_objects as go
+from flask import render_template_string
+
 
 
 app = Flask(__name__, static_folder='static')
@@ -100,37 +104,103 @@ def run_subscriber():
     subprocess.run(['python', './subscribe.py'])
 
 
+# def generate_plot(data):
+#     # print(data)
+#     fig, axs = plt.subplots(3, 1, figsize=(12, 12))
+#     plt.subplots_adjust(hspace=0.5)
+
+#     # Plotting latitude
+#     axs[0].plot(data.iloc[:, 0], data.iloc[:, 5])
+#     axs[0].set_xlabel('Time')
+#     axs[0].set_ylabel('Latitude')
+#     axs[0].set_title('Time vs Latitude')
+
+#     # Plotting longitude
+#     axs[1].plot(data.iloc[:, 0], data.iloc[:, 6])
+#     axs[1].set_xlabel('Time')
+#     axs[1].set_ylabel('Longitude')
+#     axs[1].set_title('Time vs Longitude')
+
+#     # Plotting temperature
+#     axs[2].plot(data.iloc[:, 0], data.iloc[:, 4])
+#     axs[2].set_xlabel('Time')
+#     axs[2].set_ylabel('Temperature')
+#     axs[2].set_title('Time vs Temperature')
+
+#     # Save the plot to a BytesIO object
+#     buffer = io.BytesIO()
+#     plt.savefig(buffer, format='png')
+#     buffer.seek(0)
+#     plot_data = base64.b64encode(buffer.getvalue()).decode()
+#     buffer.close()
+
+#     return plot_data
+
 def generate_plot(data):
-    # print(data)
-    fig, axs = plt.subplots(3, 1, figsize=(18.9, 12))
-    plt.subplots_adjust(hspace=0.5)
+    fig = go.Figure()
 
-    # Plotting latitude
-    axs[0].plot(data.iloc[:, 0], data.iloc[:, 5])
-    axs[0].set_xlabel('Time')
-    axs[0].set_ylabel('Latitude')
-    axs[0].set_title('Time vs Latitude')
+    # Add latitude trace
+    fig.add_trace(go.Scatter(x=data.iloc[:, 0], y=data.iloc[:, 5], name='Latitude'))
+    
+    # Add longitude trace
+    fig.add_trace(go.Scatter(x=data.iloc[:, 0], y=data.iloc[:, 6], name='Longitude'))
+    
+    # Add temperature trace
+    fig.add_trace(go.Scatter(x=data.iloc[:, 0], y=data.iloc[:, 4], name='Temperature'))
 
-    # Plotting longitude
-    axs[1].plot(data.iloc[:, 0], data.iloc[:, 6])
-    axs[1].set_xlabel('Time')
-    axs[1].set_ylabel('Longitude')
-    axs[1].set_title('Time vs Longitude')
+    # Configure layout
+    fig.update_layout(
+        title='Robot Data Plots',
+        xaxis_title='Time',
+        yaxis_title='Value',
+        hovermode='x',  # Enable x-axis hover
+        template='plotly_white'  # Use a white background template
+    )
 
-    # Plotting temperature
-    axs[2].plot(data.iloc[:, 0], data.iloc[:, 4])
-    axs[2].set_xlabel('Time')
-    axs[2].set_ylabel('Temperature')
-    axs[2].set_title('Time vs Temperature')
+    # Convert the plot to HTML
+    plot_html = fig.to_html(full_html=False, include_plotlyjs='cdn')
 
-    # Save the plot to a BytesIO object
-    buffer = io.BytesIO()
-    plt.savefig(buffer, format='png')
-    buffer.seek(0)
-    plot_data = base64.b64encode(buffer.getvalue()).decode()
-    buffer.close()
+    return plot_html
 
-    return plot_data
+
+# def index():
+#     connection = mysql.connector.connect(
+#         host=MYSQL_HOST,
+#         port=MYSQL_PORT,
+#         database=MYSQL_DB,
+#         user=MYSQL_USER,
+#         password=MYSQL_PASSWORD
+#     )
+
+#     # Fetch data from the database
+#     query = "SELECT * FROM gps_data"
+#     data = pd.read_sql(query, connection)
+
+#     # Generate the plot
+#     plot_data = generate_plot(data)
+
+#     # Close the database connection
+#     connection.close()
+
+#     # Calculate statistics for the last 10 or 5 values (based on user input)
+#     num_values = int(request.args.get('num_values', 10))  # Default to 10 values if user input is not provided
+#     last_values = data.tail(num_values)
+
+#     latitude_mean = mean(last_values['latitude'])
+#     latitude_median = median(last_values['latitude'])
+#     latitude_mode = mode(last_values['latitude'])
+#     temperature_mean = mean(last_values['temperature'])
+#     temperature_median = median(last_values['temperature'])
+#     temperature_mode = mode(last_values['temperature'])
+#     longitude_mean = mean(last_values['longitude'])
+#     longitude_median = median(last_values['longitude'])
+#     longitude_mode = mode(last_values['longitude'])
+#     # longitude_min
+#     return render_template('indexgr.html', plot_data=plot_data, latitude_mean=latitude_mean,
+#                            latitude_median=latitude_median, latitude_mode=latitude_mode,
+#                            temperature_mean=temperature_mean, temperature_median=temperature_median,
+#                            temperature_mode=temperature_mode, longitude_mean=longitude_mean,
+#                            longitude_median=longitude_median, longitude_mode=longitude_mode)
 
 @app.route('/graphs')
 def index():
@@ -152,10 +222,26 @@ def index():
     # Close the database connection
     connection.close()
 
+    # Calculate statistics for the last 10 or 5 values (based on user input)
+    num_values = int(request.args.get('num_values', 10))  # Default to 10 values if user input is not provided
+    last_values = data.tail(num_values)
 
-    return render_template('indexgr.html', plot_data=plot_data, target='_self')
+    latitude_mean = round(mean(last_values['latitude']), 2)
+    latitude_median = round(median(last_values['latitude']), 2)
+    latitude_mode = round(mode(last_values['latitude']), 2)
+    temperature_mean = round(mean(last_values['temperature']), 2)
+    temperature_median = round(median(last_values['temperature']), 2)
+    temperature_mode = round(mode(last_values['temperature']), 2)
+    longitude_mean = round(mean(last_values['longitude']), 2)
+    longitude_median = round(median(last_values['longitude']), 2)
+    longitude_mode = round(mode(last_values['longitude']), 2)
 
-
+    # Render the template with the updated plot and statistics
+    return render_template('indexgr.html', plot_data=plot_data, latitude_mean=latitude_mean,
+                           latitude_median=latitude_median, latitude_mode=latitude_mode,
+                           temperature_mean=temperature_mean, temperature_median=temperature_median,
+                           temperature_mode=temperature_mode, longitude_mean=longitude_mean,
+                           longitude_median=longitude_median, longitude_mode=longitude_mode)
 
 
 
