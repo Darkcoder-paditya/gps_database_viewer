@@ -4,16 +4,9 @@
     <title>Robot Data Plots</title>
     <script type="text/javascript">
         function autoRefreshPage() {
-            // var plotImage = document.getElementById("plotImage");
-            // var currentZoom = plotImage.style.zoom || 1;
-
             setTimeout(() => {
                 location.reload();
-            }, 5000);
-
-            // setTimeout(() => {
-            //     plotImage.style.zoom = currentZoom;
-            // }, 100);
+            }, 100000);
         }
         
         window.onload = autoRefreshPage;
@@ -60,24 +53,21 @@
         }
 
         .lon{
-            color: #ff5722; /* Deep Orange */
+            color: #EF553B; /* Deep Orange */
         }
 
         .lat {
-            color: #2196f3; /* Blue */
+            color: #636EFA; /* Blue */
         }
 
         .tem {
-            color: #4caf50; /* Green */
+            color: #00CC96; /* Green */
         }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="plot-container">
-            <!-- <div class="plot">
-                <img src="data:image/png;base64,{{ plot_data }}" alt="Plot 1">
-            </div> -->
             <div class="plot">
                 {{ plot_data | safe }}
             </div>
@@ -85,35 +75,24 @@
 
         <div class="statistics-container">
             <h2>Statistics:</h2>
-            <!-- <form action="/" method="get">
-                <label for="num_values">Number of Last Days:</label>
-                <input type="number" id="num_values" name="num_values" min="1" value="10">
-                <button type="submit">Calculate</button>
-            </form> -->
             <div class="lat">
             <h3>Latitude:</h3>
             <p class="mean">Mean: {{ latitude_mean }}</p>
             <p class="median">Median: {{ latitude_median }}</p>
             <p class="mode">Mode: {{ latitude_mode }}</p>
             </div>
-            <!-- <p>Minimum: {{ latitude_min }}</p> -->
-            <!-- <p>Maximum: {{ latitude_max }}</p> -->
             <div class="tem">
             <h3>Temperature:</h3>
             <p class="mean">Mean: {{ temperature_mean }}</p>
             <p class="median">Median: {{ temperature_median }}</p>
             <p class="mode">Mode: {{ temperature_mode }}</p>
             </div>
-            <!-- <p>Minimum: {{ temperature_min }}</p> -->
-            <!-- <p>Maximum: {{ temperature_max }}</p> -->
             <div class="lon">
             <h3>Longitude:</h3>
             <p class="mean">Mean: {{ longitude_mean }}</p>
             <p class="median">Median: {{ longitude_median }}</p>
             <p class="mode">Mode: {{ longitude_mode }}</p>
             </div>
-            <!-- <p>Minimum: {{ longitude_min }}</p> -->
-            <!-- <p>Maximum: {{ longitude_max }}</p> -->
         </div>
     </div>
 </body>

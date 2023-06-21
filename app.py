@@ -17,8 +17,6 @@ import numpy as np
 import plotly.graph_objects as go
 from flask import render_template_string
 
-
-
 app = Flask(__name__, static_folder='static')
 
 # MongoDB configuration
@@ -81,8 +79,6 @@ def display_data_route(robot_ids=None):
         password=MYSQL_PASSWORD,
         database=MYSQL_DB
     )
-    # if request.path == '/graphs':
-        # return redirect(url_for('index'))
     mysql_cursor = mysql_connection.cursor()
     if robot_ids:
         robot_id_list = robot_ids.split(',')
@@ -100,53 +96,25 @@ def display_data_route(robot_ids=None):
 
     return render_template('./index.html', data=data)
 
+
 def run_subscriber():
     subprocess.run(['python', './subscribe.py'])
 
-
-# def generate_plot(data):
-#     # print(data)
-#     fig, axs = plt.subplots(3, 1, figsize=(12, 12))
-#     plt.subplots_adjust(hspace=0.5)
-
-#     # Plotting latitude
-#     axs[0].plot(data.iloc[:, 0], data.iloc[:, 5])
-#     axs[0].set_xlabel('Time')
-#     axs[0].set_ylabel('Latitude')
-#     axs[0].set_title('Time vs Latitude')
-
-#     # Plotting longitude
-#     axs[1].plot(data.iloc[:, 0], data.iloc[:, 6])
-#     axs[1].set_xlabel('Time')
-#     axs[1].set_ylabel('Longitude')
-#     axs[1].set_title('Time vs Longitude')
-
-#     # Plotting temperature
-#     axs[2].plot(data.iloc[:, 0], data.iloc[:, 4])
-#     axs[2].set_xlabel('Time')
-#     axs[2].set_ylabel('Temperature')
-#     axs[2].set_title('Time vs Temperature')
-
-#     # Save the plot to a BytesIO object
-#     buffer = io.BytesIO()
-#     plt.savefig(buffer, format='png')
-#     buffer.seek(0)
-#     plot_data = base64.b64encode(buffer.getvalue()).decode()
-#     buffer.close()
-
-#     return plot_data
 
 def generate_plot(data):
     fig = go.Figure()
 
     # Add latitude trace
-    fig.add_trace(go.Scatter(x=data.iloc[:, 0], y=data.iloc[:, 5], name='Latitude'))
-    
+    fig.add_trace(go.Scatter(
+        x=data.iloc[:, 0], y=data.iloc[:, 5], name='Latitude'))
+
     # Add longitude trace
-    fig.add_trace(go.Scatter(x=data.iloc[:, 0], y=data.iloc[:, 6], name='Longitude'))
-    
+    fig.add_trace(go.Scatter(
+        x=data.iloc[:, 0], y=data.iloc[:, 6], name='Longitude'))
+
     # Add temperature trace
-    fig.add_trace(go.Scatter(x=data.iloc[:, 0], y=data.iloc[:, 4], name='Temperature'))
+    fig.add_trace(go.Scatter(
+        x=data.iloc[:, 0], y=data.iloc[:, 4], name='Temperature'))
 
     # Configure layout
     fig.update_layout(
@@ -162,45 +130,6 @@ def generate_plot(data):
 
     return plot_html
 
-
-# def index():
-#     connection = mysql.connector.connect(
-#         host=MYSQL_HOST,
-#         port=MYSQL_PORT,
-#         database=MYSQL_DB,
-#         user=MYSQL_USER,
-#         password=MYSQL_PASSWORD
-#     )
-
-#     # Fetch data from the database
-#     query = "SELECT * FROM gps_data"
-#     data = pd.read_sql(query, connection)
-
-#     # Generate the plot
-#     plot_data = generate_plot(data)
-
-#     # Close the database connection
-#     connection.close()
-
-#     # Calculate statistics for the last 10 or 5 values (based on user input)
-#     num_values = int(request.args.get('num_values', 10))  # Default to 10 values if user input is not provided
-#     last_values = data.tail(num_values)
-
-#     latitude_mean = mean(last_values['latitude'])
-#     latitude_median = median(last_values['latitude'])
-#     latitude_mode = mode(last_values['latitude'])
-#     temperature_mean = mean(last_values['temperature'])
-#     temperature_median = median(last_values['temperature'])
-#     temperature_mode = mode(last_values['temperature'])
-#     longitude_mean = mean(last_values['longitude'])
-#     longitude_median = median(last_values['longitude'])
-#     longitude_mode = mode(last_values['longitude'])
-#     # longitude_min
-#     return render_template('indexgr.html', plot_data=plot_data, latitude_mean=latitude_mean,
-#                            latitude_median=latitude_median, latitude_mode=latitude_mode,
-#                            temperature_mean=temperature_mean, temperature_median=temperature_median,
-#                            temperature_mode=temperature_mode, longitude_mean=longitude_mean,
-#                            longitude_median=longitude_median, longitude_mode=longitude_mode)
 
 @app.route('/graphs')
 def index():
@@ -223,7 +152,8 @@ def index():
     connection.close()
 
     # Calculate statistics for the last 10 or 5 values (based on user input)
-    num_values = int(request.args.get('num_values', 10))  # Default to 10 values if user input is not provided
+    # Default to 10 values if user input is not provided
+    num_values = int(request.args.get('num_values', 10))
     last_values = data.tail(num_values)
 
     latitude_mean = round(mean(last_values['latitude']), 2)
@@ -242,7 +172,6 @@ def index():
                            temperature_mean=temperature_mean, temperature_median=temperature_median,
                            temperature_mode=temperature_mode, longitude_mean=longitude_mean,
                            longitude_median=longitude_median, longitude_mode=longitude_mode)
-
 
 
 if __name__ == '__main__':
