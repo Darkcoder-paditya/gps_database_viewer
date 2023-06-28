@@ -52,6 +52,7 @@ def delete_data():
         )
         mysql_cursor = mysql_connection.cursor()
         mysql_cursor.execute("DELETE FROM gps_data")
+        mysql_cursor.execute("ALTER TABLE gps_data AUTO_INCREMENT = 1")
         mysql_connection.commit()
         mysql_cursor.close()
         mysql_connection.close()
@@ -104,13 +105,13 @@ def run_subscriber():
 def generate_plot(data):
     fig = go.Figure()
 
-    # Add latitude trace
-    fig.add_trace(go.Scatter(
-        x=data.iloc[:, 0], y=data.iloc[:, 5], name='Latitude'))
+    # # Add latitude trace
+    # fig.add_trace(go.Scatter(
+    #     x=data.iloc[:, 0], y=data.iloc[:, 5], name='Latitude'))
 
-    # Add longitude trace
-    fig.add_trace(go.Scatter(
-        x=data.iloc[:, 0], y=data.iloc[:, 6], name='Longitude'))
+    # # Add longitude trace
+    # fig.add_trace(go.Scatter(
+    #     x=data.iloc[:, 0], y=data.iloc[:, 6], name='Longitude'))
 
     # Add temperature trace
     fig.add_trace(go.Scatter(
@@ -118,10 +119,10 @@ def generate_plot(data):
 
     # Configure layout
     fig.update_layout(
-        title='Robot Data Plots',
+        title='Temperature vs Time',
         xaxis_title='Time',
-        yaxis_title='Value',
-        hovermode='x',  # Enable x-axis hover
+        yaxis_title='Temperature (°C)',
+        hovermode='closest',  # Enable x-axis hover
         template='plotly_white'  # Use a white background template
     )
 
@@ -141,7 +142,7 @@ def get_data():
     )
 
     # Fetch the latest data from the database
-    query = "SELECT * FROM gps_data ORDER BY id DESC LIMIT 10"  
+    query = "SELECT * FROM gps_data ORDER BY id DESC LIMIT 100"  
     data = pd.read_sql(query, connection)
 
     # Close the database connection
@@ -162,7 +163,7 @@ def index():
     )
 
     # Fetch data from the database
-    query = "SELECT * FROM gps_data ORDER BY id DESC LIMIT 10"
+    query = "SELECT * FROM gps_data ORDER BY id DESC LIMIT 100"
     data = pd.read_sql(query, connection)
 
     # Generate the plot

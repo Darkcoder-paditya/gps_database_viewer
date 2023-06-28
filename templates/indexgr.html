@@ -29,14 +29,23 @@
             border-radius: 5px;
         }
 
+        .statistics-container h2 {
+            margin-top: 0;
+            color: #333;
+        }
+
         .statistics-container h3 {
             margin-top: 20px;
+            font-size: 18px;
+            color: #555;
         }
 
         .statistics-container p {
             margin: 5px 0;
-            border-bottom: 1px solid #ddd;
             padding-bottom: 5px;
+            font-size: 14px;
+            border-bottom: 1px solid #ddd;
+            color: #333;
         }
 
         .statistics-container p:last-child {
@@ -45,7 +54,7 @@
         }
 
         #map {
-            height: 400px;
+            height: 900px;
             width: 100%;
             margin-top: 20px;
         }
@@ -62,22 +71,22 @@
         <div class="statistics-container">
             <h2>Statistics:</h2>
             <div class="lat">
-            <h3>Latitude:</h3>
-            <p class="mean">Mean: {{ latitude_mean }}</p>
-            <p class="median">Median: {{ latitude_median }}</p>
-            <p class="mode">Mode: {{ latitude_mode }}</p>
+                <h3>Latitude:</h3>
+                <p class="mean">Mean: {{ latitude_mean }}</p>
+                <p class="median">Median: {{ latitude_median }}</p>
+                <p class="mode">Mode: {{ latitude_mode }}</p>
             </div>
             <div class="tem">
-            <h3>Temperature:</h3>
-            <p class="mean">Mean: {{ temperature_mean }}</p>
-            <p class="median">Median: {{ temperature_median }}</p>
-            <p class="mode">Mode: {{ temperature_mode }}</p>
+                <h3>Temperature:</h3>
+                <p class="mean">Mean: {{ temperature_mean }}</p>
+                <p class="median">Median: {{ temperature_median }}</p>
+                <p class="mode">Mode: {{ temperature_mode }}</p>
             </div>
             <div class="lon">
-            <h3>Longitude:</h3>
-            <p class="mean">Mean: {{ longitude_mean }}</p>
-            <p class="median">Median: {{ longitude_median }}</p>
-            <p class="mode">Mode: {{ longitude_mode }}</p>
+                <h3>Longitude:</h3>
+                <p class="mean">Mean: {{ longitude_mean }}</p>
+                <p class="median">Median: {{ longitude_median }}</p>
+                <p class="mode">Mode: {{ longitude_mode }}</p>
             </div>
         </div>
     </div>
@@ -85,7 +94,7 @@
     <div id="map"></div>
 
     <script>
-        var map = L.map('map').setView([25.3, 83], 10);
+        var map = L.map('map').setView([25.3, 83], 11.2);
 
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             maxZoom: 19,
@@ -98,9 +107,9 @@
             .then(data => {
                 data.forEach(function (location) {
                     var marker = L.marker([location.latitude, location.longitude]).addTo(map);
+                    marker.bindTooltip('Temperature: ' + location.temperature).openTooltip;
                 });
-            })
-            .catch(error => console.error('Error:', error));
+            });
     </script>
 </body>
 </html>
