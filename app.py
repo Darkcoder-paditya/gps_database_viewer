@@ -130,6 +130,26 @@ def generate_plot(data):
 
     return plot_html
 
+@app.route('/data')
+def get_data():
+    connection = mysql.connector.connect(
+        host=MYSQL_HOST,
+        port=MYSQL_PORT,
+        database=MYSQL_DB,
+        user=MYSQL_USER,
+        password=MYSQL_PASSWORD
+    )
+
+    # Fetch the latest data from the database
+    query = "SELECT * FROM gps_data ORDER BY id DESC LIMIT 10"  
+    data = pd.read_sql(query, connection)
+
+    # Close the database connection
+    connection.close()
+
+    # Convert the data to JSON format and return
+    data_json = data.to_json(orient='records')
+    return data_json
 
 @app.route('/graphs')
 def index():
@@ -142,7 +162,7 @@ def index():
     )
 
     # Fetch data from the database
-    query = "SELECT * FROM gps_data"
+    query = "SELECT * FROM gps_data ORDER BY id DESC LIMIT 10"
     data = pd.read_sql(query, connection)
 
     # Generate the plot
