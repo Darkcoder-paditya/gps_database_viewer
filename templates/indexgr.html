@@ -4,10 +4,14 @@
     <title>Robot Data Plots</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet.heat/dist/leaflet-heat.js"></script> <!-- Heatmap plugin -->
     <style>
         body {
             font-family: Arial, sans-serif;
             margin: 20px;
+            background-image: url('../static/bgi.jpg');
+            background-repeat: no-repeat;
+            background-size: cover;
         }
 
         .container {
@@ -19,14 +23,22 @@
             width: 100%;
             max-width: 1200px;
             margin-right: 50px;
+            border: 2px solid #555;
+            border-radius: 10px;
+            padding: 10px;
+            background-color: #fff;
+            background-color: rgba(255, 255, 255, 0.4);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
         }
 
         .statistics-container {
             flex: 1;
             padding: 20px;
-            background-color: #f9f9f9;
-            border: 1px solid #ccc;
-            border-radius: 5px;
+            background-color: #fff;
+            border: 2px solid #555;
+            border-radius: 10px;
+            background-color: rgba(255, 255, 255, 0.7);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
         }
 
         .statistics-container h2 {
@@ -57,6 +69,9 @@
             height: 900px;
             width: 100%;
             margin-top: 20px;
+            border: 2px solid #555;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
         }
     </style>
 </head>
@@ -70,23 +85,29 @@
 
         <div class="statistics-container">
             <h2>Statistics:</h2>
-            <div class="lat">
-                <h3>Latitude:</h3>
-                <p class="mean">Mean: {{ latitude_mean }}</p>
-                <p class="median">Median: {{ latitude_median }}</p>
-                <p class="mode">Mode: {{ latitude_mode }}</p>
-            </div>
             <div class="tem">
                 <h3>Temperature:</h3>
                 <p class="mean">Mean: {{ temperature_mean }}</p>
                 <p class="median">Median: {{ temperature_median }}</p>
                 <p class="mode">Mode: {{ temperature_mode }}</p>
             </div>
+            <div class="lat">
+                <h3>Quality 1:</h3>
+                <p class="mean">Mean: {{ quality_1_mean }}</p>
+                <p class="median">Median: {{ quality_1_median }}</p>
+                <p class="mode">Mode: {{ quality_1_mode }}</p>
+            </div>  
             <div class="lon">
-                <h3>Longitude:</h3>
-                <p class="mean">Mean: {{ longitude_mean }}</p>
-                <p class="median">Median: {{ longitude_median }}</p>
-                <p class="mode">Mode: {{ longitude_mode }}</p>
+                <h3>Quality 2:</h3>
+                <p class="mean">Mean: {{ quality_2_mean }}</p>
+                <p class="median">Median: {{ quality_2_median }}</p>
+                <p class="mode">Mode: {{ quality_2_mode }}</p>
+            </div>
+            <div class="lon">
+                <h3>Quality 3:</h3>
+                <p class="mean">Mean: {{ quality_3_mean }}</p>
+                <p class="median">Median: {{ quality_3_median }}</p>
+                <p class="mode">Mode: {{ quality_3_mode }}</p>
             </div>
         </div>
     </div>
@@ -94,7 +115,10 @@
     <div id="map"></div>
 
     <script>
-        var map = L.map('map').setView([25.3, 83], 11.2);
+        
+
+
+        var map = L.map('map').setView([25.3, 83], 11.5);
 
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             maxZoom: 19,
@@ -102,13 +126,39 @@
         }).addTo(map);
 
         // Fetch the location data from the server
+        // fetch('/data')
+        //     .then(response => response.json())
+        //     .then(data => {
+        //         var heatData = [];
+        //         data.forEach(function (location) {
+        //             heatData.push([location.latitude, location.longitude, parseInt(location.temperature)]);
+        //             var marker = L.marker([location.latitude, location.longitude]).addTo(map);
+        //             marker.bindTooltip('Temperature: ' + location.temperature).openTooltip();
+        //         });
+
+        //         // Create the heatmap layer
+        //         // var heat = L.heatLayer(heatData, { radius: 35, blur: 15, maxZoom: 13 }).addTo(map);
+        //     });
         fetch('/data')
             .then(response => response.json())
             .then(data => {
+                var heatData = [];
                 data.forEach(function (location) {
+                    heatData.push([location.latitude, location.longitude, parseInt(location.temperature)]);
                     var marker = L.marker([location.latitude, location.longitude]).addTo(map);
-                    marker.bindTooltip('Temperature: ' + location.temperature).openTooltip;
+                    marker.on('mouseover', function (e) {
+                        // this.bindTooltip('Temperature: ' + location.temperature).openTooltip();
+                        const { temperature, quality_1, quality_2, quality_3 } = location;
+                        const tooltipContent = `Temperature: ${temperature}<br>Quality 1: ${quality_1}<br>Quality 2: ${quality_2}<br>Quality 3: ${quality_3}`;
+                        this.bindTooltip(tooltipContent).openTooltip();
+                    });
+                    marker.on('mouseout', function (e) {
+                        this.unbindTooltip();
+                    });
                 });
+
+                // Create the heatmap layer
+                // var heat = L.heatLayer(heatData, { radius: 35, blur: 15, maxZoom: 13 }).addTo(map);
             });
     </script>
 </body>

@@ -40,6 +40,76 @@ function sortDataByLatitude() {
         tbody.appendChild(row);
     });
 }
+// 
+
+
+
+
+
+
+function sortDataByq1() {
+    var table = document.getElementById("data-table");
+    var rows = Array.from(table.getElementsByTagName("tr"));
+
+    rows.sort(function(a, b) {
+        var aValue = parseFloat(a.cells[6].innerText);
+        var bValue = parseFloat(b.cells[6].innerText);
+
+        if (isNaN(aValue) || isNaN(bValue)) {
+            return 0;
+        }
+
+        return aValue - bValue;
+    });
+
+    var tbody = table.querySelector("tbody");
+    rows.forEach(function(row) {
+        tbody.appendChild(row);
+    });
+}
+function sortDataByq2() {
+    var table = document.getElementById("data-table");
+    var rows = Array.from(table.getElementsByTagName("tr"));
+
+    rows.sort(function(a, b) {
+        var aValue = parseFloat(a.cells[7].innerText);
+        var bValue = parseFloat(b.cells[7].innerText);
+
+        if (isNaN(aValue) || isNaN(bValue)) {
+            return 0;
+        }
+
+        return aValue - bValue;
+    });
+
+    var tbody = table.querySelector("tbody");
+    rows.forEach(function(row) {
+        tbody.appendChild(row);
+    });
+}
+function sortDataByq3() {
+    var table = document.getElementById("data-table");
+    var rows = Array.from(table.getElementsByTagName("tr"));
+
+    rows.sort(function(a, b) {
+        var aValue = parseFloat(a.cells[8].innerText);
+        var bValue = parseFloat(b.cells[8].innerText);
+
+        if (isNaN(aValue) || isNaN(bValue)) {
+            return 0;
+        }
+
+        return aValue - bValue;
+    });
+
+    var tbody = table.querySelector("tbody");
+    rows.forEach(function(row) {
+        tbody.appendChild(row);
+    });
+}
+// 
+
+
 
 function sortDataByLongitude() {
     var table = document.getElementById("data-table");
@@ -132,7 +202,7 @@ function saveDataAsCSV() {
     
     var table = document.getElementById('data-table');
     var csv='';
-     csv+= 'Sr No.,Robot ID,Topic,Temperature,Latitude,Longitude';
+     csv+= 'Sr No.,Robot ID,Topic,Temperature,Latitude,Longitude,Quality1,Quality2,Quality3';
     csv += '\n';
     for (var i = 1; i < table.rows.length; i++) {
         var row = table.rows[i];

@@ -1,13 +1,16 @@
 body {
   font-family: Arial, sans-serif;
-  background-color: #e0e0e0;
+  /* background-color: #e0e0e0; */
+  background-image: url('../static/bgi.jpg');
+            background-repeat: no-repeat;
+            background-size: cover;
   margin: 0;
   padding: 20px;
 }
 
 h1 {
   text-align: center;
-  color: #333;
+  color: rgb(9, 255, 0);
   margin-bottom: 20px;
 }
 
@@ -15,6 +18,7 @@ table {
   width: 100%;
   border-collapse: collapse;
   background-color: #fff;
+  background-color: rgba(255, 255, 255, 0.8);
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
 }
 

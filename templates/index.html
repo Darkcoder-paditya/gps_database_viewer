@@ -63,6 +63,31 @@
                         </button>
                     </div>
                 </th>
+                <!--  -->
+                <th>
+                    <div class="column-header">
+                        <span class="column-header-text">Quality 1</span>
+                        <button class="upside-down-arrow-button" onclick="sortDataByq1()">
+                            &#x1F53C;
+                        </button>
+                    </div>
+                </th>
+                <th>
+                    <div class="column-header">
+                        <span class="column-header-text">Quality 2</span>
+                        <button class="upside-down-arrow-button" onclick="sortDataByq2()">
+                            &#x1F53C;
+                        </button>
+                    </div>
+                </th>
+                <th>
+                    <div class="column-header">
+                        <span class="column-header-text">Quality 3</span>
+                        <button class="upside-down-arrow-button" onclick="sortDataByq3()">
+                            &#x1F53C;
+                        </button>
+                    </div>
+                </th>
             </tr>
         </thead>
         
@@ -76,6 +101,9 @@
                     <td>{{ document.temperature }}</td>
                     <td>{{ document.latitude }}</td>
                     <td>{{ document.longitude }}</td>
+                    <td>{{ document.quality_1 }}</td>
+                    <td>{{ document.quality_2 }}</td>
+                    <td>{{ document.quality_3 }}</td>
                 </tr>
             {% endfor %}
         </tbody>

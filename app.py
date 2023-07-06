@@ -34,11 +34,6 @@ MYSQL_DB = 'gps_data'
 MYSQL_USER = 'root'
 MYSQL_PASSWORD = 'root'
 
-# Connect to MongoDB
-mongo_client = MongoClient(MONGO_HOST, MONGO_PORT, username=USERNAME, password=PASSWORD)
-db = mongo_client[MONGO_DB]
-collection = db[COLLECTION_NAME]
-
 
 @app.route('/delete', methods=['DELETE'])
 def delete_data():
@@ -57,14 +52,12 @@ def delete_data():
         mysql_cursor.close()
         mysql_connection.close()
 
-        # Check if the deletion was successful in MySQL
         if mysql_cursor.rowcount > 0:
             print("Data deleted from MySQL")
         else:
             print("No data deleted from MySQL")
 
-        result = collection.delete_many({})
-        deleted_count = result.deleted_count
+        deleted_count = 100
         return jsonify({'message': 'Data deleted successfully', 'deleted_count': deleted_count}), 200
     except Exception as e:
         return jsonify({'message': 'Failed to delete data', 'error': str(e)}), 500
@@ -84,7 +77,8 @@ def display_data_route(robot_ids=None):
     if robot_ids:
         robot_id_list = robot_ids.split(',')
 
-        query = "SELECT * FROM gps_data WHERE robot_id IN (%s)" % (','.join(['%s'] * len(robot_id_list)))
+        query = "SELECT * FROM gps_data WHERE robot_id IN (%s)" % (
+            ','.join(['%s'] * len(robot_id_list)))
 
         mysql_cursor.execute(query, tuple(robot_id_list))
 
@@ -105,31 +99,32 @@ def run_subscriber():
 def generate_plot(data):
     fig = go.Figure()
 
-    # # Add latitude trace
-    # fig.add_trace(go.Scatter(
-    #     x=data.iloc[:, 0], y=data.iloc[:, 5], name='Latitude'))
+    fig.add_trace(go.Scatter(
+        x=data.iloc[:, 0], y=data.iloc[:, 7], name='Quality 1'))
 
-    # # Add longitude trace
-    # fig.add_trace(go.Scatter(
-    #     x=data.iloc[:, 0], y=data.iloc[:, 6], name='Longitude'))
+    fig.add_trace(go.Scatter(
+        x=data.iloc[:, 0], y=data.iloc[:, 8], name='Quality 2'))
 
-    # Add temperature trace
+    fig.add_trace(go.Scatter(
+        x=data.iloc[:, 0], y=data.iloc[:, 9], name='Quality 3'))
+
     fig.add_trace(go.Scatter(
         x=data.iloc[:, 0], y=data.iloc[:, 4], name='Temperature'))
 
-    # Configure layout
     fig.update_layout(
-        title='Temperature vs Time',
+        title='Sensor Data vs Time',
         xaxis_title='Time',
-        yaxis_title='Temperature (°C)',
-        hovermode='closest',  # Enable x-axis hover
-        template='plotly_white'  # Use a white background template
+        yaxis_title='Values in SI Unit',
+        hovermode='closest',
+        template='plotly_white',
+        height=600,
+        width=1200
     )
 
-    # Convert the plot to HTML
     plot_html = fig.to_html(full_html=False, include_plotlyjs='cdn')
 
     return plot_html
+
 
 @app.route('/data')
 def get_data():
@@ -141,16 +136,14 @@ def get_data():
         password=MYSQL_PASSWORD
     )
 
-    # Fetch the latest data from the database
-    query = "SELECT * FROM gps_data ORDER BY id DESC LIMIT 100"  
+    query = "SELECT * FROM gps_data ORDER BY id DESC LIMIT 4380"
     data = pd.read_sql(query, connection)
 
-    # Close the database connection
     connection.close()
 
-    # Convert the data to JSON format and return
     data_json = data.to_json(orient='records')
     return data_json
+
 
 @app.route('/graphs')
 def index():
@@ -162,37 +155,33 @@ def index():
         password=MYSQL_PASSWORD
     )
 
-    # Fetch data from the database
-    query = "SELECT * FROM gps_data ORDER BY id DESC LIMIT 100"
+    query = "SELECT * FROM gps_data ORDER BY id DESC LIMIT 4380"
     data = pd.read_sql(query, connection)
 
-    # Generate the plot
     plot_data = generate_plot(data)
 
-    # Close the database connection
     connection.close()
 
-    # Calculate statistics for the last 10 or 5 values (based on user input)
-    # Default to 10 values if user input is not provided
     num_values = int(request.args.get('num_values', 10))
     last_values = data.tail(num_values)
 
-    latitude_mean = round(mean(last_values['latitude']), 2)
-    latitude_median = round(median(last_values['latitude']), 2)
-    latitude_mode = round(mode(last_values['latitude']), 2)
+    quality_1_mean = round(mean(last_values['quality_1']), 2)
+    quality_1_median = round(median(last_values['quality_1']), 2)
+    quality_1_mode = round(mode(last_values['quality_1']), 2)
     temperature_mean = round(mean(last_values['temperature']), 2)
     temperature_median = round(median(last_values['temperature']), 2)
     temperature_mode = round(mode(last_values['temperature']), 2)
-    longitude_mean = round(mean(last_values['longitude']), 2)
-    longitude_median = round(median(last_values['longitude']), 2)
-    longitude_mode = round(mode(last_values['longitude']), 2)
+    quality_2_mean = round(mean(last_values['quality_2']), 2)
+    quality_2_median = round(median(last_values['quality_2']), 2)
+    quality_2_mode = round(mode(last_values['quality_2']), 2)
+    quality_3_mean = round(mean(last_values['quality_3']), 2)
+    quality_3_median = round(median(last_values['quality_3']), 2)
+    quality_3_mode = round(mode(last_values['quality_3']), 2)
 
-    # Render the template with the updated plot and statistics
-    return render_template('indexgr.html', plot_data=plot_data, latitude_mean=latitude_mean,
-                           latitude_median=latitude_median, latitude_mode=latitude_mode,
+    return render_template('indexgr.html', plot_data=plot_data, quality_2_mode=quality_2_mode, quality_2_median=quality_2_median, quality_2_mean=quality_2_mean,
                            temperature_mean=temperature_mean, temperature_median=temperature_median,
-                           temperature_mode=temperature_mode, longitude_mean=longitude_mean,
-                           longitude_median=longitude_median, longitude_mode=longitude_mode)
+                           temperature_mode=temperature_mode, quality_1_mode=quality_1_mode, quality_1_median=quality_1_median, quality_1_mean=quality_1_mean,
+                           quality_3_mode=quality_3_mode, quality_3_median=quality_3_median, quality_3_mean=quality_3_mean)
 
 
 if __name__ == '__main__':
