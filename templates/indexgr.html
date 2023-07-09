@@ -75,6 +75,18 @@
             border-radius: 10px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
         }
+
+        #bargraph-container {
+            width: 100%;
+            max-width: 1850px;
+            margin-top: 50px;
+            border: 2px solid #555;
+            border-radius: 10px;
+            padding: 10px;
+            background-color: #fff;
+            background-color: rgba(255, 255, 255, 0.4);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
     </style>
 </head>
 
@@ -115,8 +127,8 @@
     </div>
     <div id="map"></div>
     <h1>Graphs</h1>
-    <div id="graph-container">
-        {{ bgraph_data | safe }}
+    <div id="bargraph-container" class="plot-container">
+        {{ bargraph_data | safe }}
     </div>
     <script>
         var map = L.map('map').setView([25.3, 83], 11.5);

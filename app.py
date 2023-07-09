@@ -13,6 +13,7 @@ import io
 import base64
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
+from plotly.subplots import make_subplots
 import numpy as np
 import plotly.graph_objects as go
 from flask import render_template_string
@@ -190,21 +191,41 @@ def index():
     for row in quality_3_results:
         quality_3_x.append(row[0])
         quality_3_y.append(row[1])
-    bfig = go.Figure()
+    # bfig = go.Figure()
 
-    bfig.add_trace(go.Bar(x=temperature_x, y=temperature_y, name='Average Temperature'))
-    bfig.add_trace(go.Bar(x=quality_1_x, y=quality_1_y, name='Average Quality 1'))
-    bfig.add_trace(go.Bar(x=quality_2_x, y=quality_2_y, name='Average Quality 2'))
-    bfig.add_trace(go.Bar(x=quality_3_x, y=quality_3_y, name='Average Quality 3'))
+    # bfig.add_trace(go.Bar(x=temperature_x, y=temperature_y, name='Average Temperature'))
+    # bfig.add_trace(go.Bar(x=quality_1_x, y=quality_1_y, name='Average Quality 1'))
+    # bfig.add_trace(go.Bar(x=quality_2_x, y=quality_2_y, name='Average Quality 2'))
+    # bfig.add_trace(go.Bar(x=quality_3_x, y=quality_3_y, name='Average Quality 3'))
+
+    # bfig.update_layout(
+    #     barmode='group',
+    #     xaxis_title='Robot IDs',
+    #     yaxis_title='Average Value',
+    #     title='Average Values for Temperature and Quality Metrics'
+    # )
+
+    # bgraph_data = bfig.to_html(full_html=False)
+    bfig = make_subplots(rows=2, cols=2, subplot_titles=[
+        'Average Temperature',
+        'Average Quality 1',
+        'Average Quality 2',
+        'Average Quality 3'
+    ])
+
+    bfig.add_trace(go.Bar(x=temperature_x, y=temperature_y, name='Average Temperature'), row=1, col=1)
+    bfig.add_trace(go.Bar(x=quality_1_x, y=quality_1_y, name='Average Quality 1'), row=1, col=2)
+    bfig.add_trace(go.Bar(x=quality_2_x, y=quality_2_y, name='Average Quality 2'), row=2, col=1)
+    bfig.add_trace(go.Bar(x=quality_3_x, y=quality_3_y, name='Average Quality 3'), row=2, col=2)
 
     bfig.update_layout(
-        barmode='group',
-        xaxis_title='Robot IDs',
-        yaxis_title='Average Value',
-        title='Average Values for Temperature and Quality Metrics'
+        height=600,
+        width=1850,
+        title_text='Average Values for Temperature and Quality Metrics',
+        showlegend=False
     )
 
-    bgraph_data = bfig.to_html(full_html=False)
+    bargraph_data = bfig.to_html(full_html=False)
 
     # Close the database connection
     # connection.close()
@@ -242,7 +263,7 @@ def index():
                            temperature_mean=temperature_mean, temperature_median=temperature_median,
                            temperature_mode=temperature_mode, quality_1_mode=quality_1_mode, quality_1_median=quality_1_median, quality_1_mean=quality_1_mean,
                            quality_3_mode=quality_3_mode, quality_3_median=quality_3_median, quality_3_mean=quality_3_mean,
-                           bgraph_data=bgraph_data)
+                           bargraph_data=bargraph_data)
 
 
 if __name__ == '__main__':
