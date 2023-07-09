@@ -6,6 +6,7 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
     <script src="https://unpkg.com/leaflet.heat/dist/leaflet-heat.js"></script> <!-- Heatmap plugin -->
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -113,6 +114,10 @@
         </div>
     </div>
     <div id="map"></div>
+    <h1>Graphs</h1>
+    <div id="graph-container">
+        {{ bgraph_data | safe }}
+    </div>
     <script>
         var map = L.map('map').setView([25.3, 83], 11.5);
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {

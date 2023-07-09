@@ -136,7 +136,7 @@ def get_data():
         password=MYSQL_PASSWORD
     )
 
-    query = "SELECT * FROM gps_data ORDER BY id DESC LIMIT 4380"
+    query = "SELECT * FROM gps_data ORDER BY id DESC "
     data = pd.read_sql(query, connection)
 
     connection.close()
@@ -154,8 +154,68 @@ def index():
         user=MYSQL_USER,
         password=MYSQL_PASSWORD
     )
+    cursor = connection.cursor()
+    cursor.execute('SELECT robot_id, AVG(temperature) FROM gps_data GROUP BY robot_id')
+    temperature_results = cursor.fetchall()
 
-    query = "SELECT * FROM gps_data ORDER BY id DESC LIMIT 4380"
+    cursor.execute('SELECT robot_id, AVG(quality_1) FROM gps_data GROUP BY robot_id')
+    quality_1_results = cursor.fetchall()
+
+    cursor.execute('SELECT robot_id, AVG(quality_2) FROM gps_data GROUP BY robot_id')
+    quality_2_results = cursor.fetchall()
+
+    cursor.execute('SELECT robot_id, AVG(quality_3) FROM gps_data GROUP BY robot_id')
+    quality_3_results = cursor.fetchall()
+
+    temperature_x = []
+    temperature_y = []
+    for row in temperature_results:
+        temperature_x.append(row[0])
+        temperature_y.append(row[1])
+
+    quality_1_x = []
+    quality_1_y = []
+    for row in quality_1_results:
+        quality_1_x.append(row[0])
+        quality_1_y.append(row[1])
+
+    quality_2_x = []
+    quality_2_y = []
+    for row in quality_2_results:
+        quality_2_x.append(row[0])
+        quality_2_y.append(row[1])
+
+    quality_3_x = []
+    quality_3_y = []
+    for row in quality_3_results:
+        quality_3_x.append(row[0])
+        quality_3_y.append(row[1])
+    bfig = go.Figure()
+
+    bfig.add_trace(go.Bar(x=temperature_x, y=temperature_y, name='Average Temperature'))
+    bfig.add_trace(go.Bar(x=quality_1_x, y=quality_1_y, name='Average Quality 1'))
+    bfig.add_trace(go.Bar(x=quality_2_x, y=quality_2_y, name='Average Quality 2'))
+    bfig.add_trace(go.Bar(x=quality_3_x, y=quality_3_y, name='Average Quality 3'))
+
+    bfig.update_layout(
+        barmode='group',
+        xaxis_title='Robot IDs',
+        yaxis_title='Average Value',
+        title='Average Values for Temperature and Quality Metrics'
+    )
+
+    bgraph_data = bfig.to_html(full_html=False)
+
+    # Close the database connection
+    # connection.close()
+
+
+
+
+
+
+
+    query = "SELECT * FROM gps_data ORDER BY id DESC "
     data = pd.read_sql(query, connection)
 
     plot_data = generate_plot(data)
@@ -181,7 +241,8 @@ def index():
     return render_template('indexgr.html', plot_data=plot_data, quality_2_mode=quality_2_mode, quality_2_median=quality_2_median, quality_2_mean=quality_2_mean,
                            temperature_mean=temperature_mean, temperature_median=temperature_median,
                            temperature_mode=temperature_mode, quality_1_mode=quality_1_mode, quality_1_median=quality_1_median, quality_1_mean=quality_1_mean,
-                           quality_3_mode=quality_3_mode, quality_3_median=quality_3_median, quality_3_mean=quality_3_mean)
+                           quality_3_mode=quality_3_mode, quality_3_median=quality_3_median, quality_3_mean=quality_3_mean,
+                           bgraph_data=bgraph_data)
 
 
 if __name__ == '__main__':
