@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>Robot Data Plots</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
@@ -75,6 +76,7 @@
         }
     </style>
 </head>
+
 <body>
     <div class="container">
         <div class="plot-container">
@@ -82,7 +84,6 @@
                 {{ plot_data | safe }}
             </div>
         </div>
-
         <div class="statistics-container">
             <h2>Statistics:</h2>
             <div class="tem">
@@ -96,7 +97,7 @@
                 <p class="mean">Mean: {{ quality_1_mean }}</p>
                 <p class="median">Median: {{ quality_1_median }}</p>
                 <p class="mode">Mode: {{ quality_1_mode }}</p>
-            </div>  
+            </div>
             <div class="lon">
                 <h3>Quality 2:</h3>
                 <p class="mean">Mean: {{ quality_2_mean }}</p>
@@ -111,34 +112,14 @@
             </div>
         </div>
     </div>
-
     <div id="map"></div>
-
     <script>
-        
-
-
         var map = L.map('map').setView([25.3, 83], 11.5);
-
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             maxZoom: 19,
             attribution: 'Map data © <a href="https://openstreetmap.org">OpenStreetMap</a> contributors'
         }).addTo(map);
 
-        // Fetch the location data from the server
-        // fetch('/data')
-        //     .then(response => response.json())
-        //     .then(data => {
-        //         var heatData = [];
-        //         data.forEach(function (location) {
-        //             heatData.push([location.latitude, location.longitude, parseInt(location.temperature)]);
-        //             var marker = L.marker([location.latitude, location.longitude]).addTo(map);
-        //             marker.bindTooltip('Temperature: ' + location.temperature).openTooltip();
-        //         });
-
-        //         // Create the heatmap layer
-        //         // var heat = L.heatLayer(heatData, { radius: 35, blur: 15, maxZoom: 13 }).addTo(map);
-        //     });
         fetch('/data')
             .then(response => response.json())
             .then(data => {
@@ -147,7 +128,6 @@
                     heatData.push([location.latitude, location.longitude, parseInt(location.temperature)]);
                     var marker = L.marker([location.latitude, location.longitude]).addTo(map);
                     marker.on('mouseover', function (e) {
-                        // this.bindTooltip('Temperature: ' + location.temperature).openTooltip();
                         const { temperature, quality_1, quality_2, quality_3 } = location;
                         const tooltipContent = `Temperature: ${temperature}<br>Quality 1: ${quality_1}<br>Quality 2: ${quality_2}<br>Quality 3: ${quality_3}`;
                         this.bindTooltip(tooltipContent).openTooltip();
@@ -156,10 +136,8 @@
                         this.unbindTooltip();
                     });
                 });
-
-                // Create the heatmap layer
-                // var heat = L.heatLayer(heatData, { radius: 35, blur: 15, maxZoom: 13 }).addTo(map);
             });
     </script>
 </body>
+
 </html>
