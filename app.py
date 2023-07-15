@@ -102,6 +102,7 @@ def generate_plot(data):
 
     fig.add_trace(go.Scatter(
         x=data.iloc[:, 0], y=data.iloc[:, 7], name='Quality 1'))
+        
 
     fig.add_trace(go.Scatter(
         x=data.iloc[:, 0], y=data.iloc[:, 8], name='Quality 2'))
@@ -119,7 +120,13 @@ def generate_plot(data):
         hovermode='closest',
         template='plotly_white',
         height=600,
-        width=1150
+        width=1150,
+        paper_bgcolor='rgb(22, 40, 88)',
+        plot_bgcolor='rgb(22, 40, 88)',
+        font_family="Courier New",
+        font_color="rgb(138, 228, 255)",
+        title_font_family="Times New Roman",
+        title_font_color="rgb(138, 228, 255)",
     )
 
     plot_html = fig.to_html(full_html=False, include_plotlyjs='cdn')
@@ -222,7 +229,14 @@ def index():
         height=950,
         width=635,
         title_text='Average Values for Quality Metrics',
-        showlegend=False
+        showlegend=True,
+        paper_bgcolor='rgb(22, 40, 88)',
+        plot_bgcolor='rgb(22, 40, 88)',
+        font_family="Courier New",
+        font_color="rgb(138, 228, 255)",
+        title_font_family="Times New Roman",
+        title_font_color="rgb(138, 228, 255)",
+        legend_title_font_color="rgb(138, 228, 255)"
     )
 
     bargraph_data = bfig.to_html(full_html=False)
