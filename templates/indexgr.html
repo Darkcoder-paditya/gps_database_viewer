@@ -11,9 +11,11 @@
         body {
             font-family: Arial, sans-serif;
             margin: 20px;
-            background-image: url('../static/bgi.jpg');
-            background-repeat: no-repeat;
-            background-size: cover;
+            background-color: rgb(141, 141, 141);
+            /* background-image: url('../static/bgi.jpg'); */
+
+            /* background-repeat: no-repeat; */
+            /* background-size: cover; */
         }
 
         .container {
@@ -23,7 +25,7 @@
 
         .plot-container {
             width: 100%;
-            max-width: 1200px;
+            max-width: 1150px;
             margin-right: 50px;
             border: 2px solid #555;
             border-radius: 10px;
@@ -37,7 +39,7 @@
             flex: 1;
             padding: 20px;
             background-color: #fff;
-            border: 2px solid #555;
+            border: 2px solid rgb(126, 126, 126);
             border-radius: 10px;
             background-color: rgba(255, 255, 255, 0.7);
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
@@ -68,8 +70,10 @@
         }
 
         #map {
-            height: 900px;
-            width: 100%;
+            height: 1000px;
+            /* height: auto; */
+            
+            width: 1150px;
             margin-top: 20px;
             border: 2px solid #555;
             border-radius: 10px;
@@ -77,8 +81,9 @@
         }
 
         #bargraph-container {
-            width: 100%;
-            max-width: 1850px;
+            width: 635px;
+            height:950px;
+            /* max-width: 1850px; */
             margin-top: 50px;
             border: 2px solid #555;
             border-radius: 10px;
@@ -87,6 +92,11 @@
             background-color: rgba(255, 255, 255, 0.4);
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
         }
+        .plot-bar-map {
+        display: flex;
+        flex-wrap: wrap;
+        flex-direction: row;
+    }
     </style>
 </head>
 
@@ -125,11 +135,16 @@
             </div>
         </div>
     </div>
-    <div id="map"></div>
-    <h1>Graphs</h1>
-    <div id="bargraph-container" class="plot-container">
-        {{ bargraph_data | safe }}
+    
+    <div id="bar-map" class="plot-bar-map">
+        <!-- <h1 color="blue">Bar Graphs</h1> -->
+        <div id="bargraph-container" class="plot-container">
+            {{ bargraph_data | safe }}
+        </div>
+        <div id="map">
+        </div>
     </div>
+
     <script>
         var map = L.map('map').setView([25.3, 83], 11.5);
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {

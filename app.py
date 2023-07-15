@@ -119,7 +119,7 @@ def generate_plot(data):
         hovermode='closest',
         template='plotly_white',
         height=600,
-        width=1200
+        width=1150
     )
 
     plot_html = fig.to_html(full_html=False, include_plotlyjs='cdn')
@@ -137,7 +137,7 @@ def get_data():
         password=MYSQL_PASSWORD
     )
 
-    query = "SELECT * FROM gps_data ORDER BY id DESC "
+    query = "SELECT * FROM gps_data ORDER BY id DESC LIMIT 50"
     data = pd.read_sql(query, connection)
 
     connection.close()
@@ -156,16 +156,16 @@ def index():
         password=MYSQL_PASSWORD
     )
     cursor = connection.cursor()
-    cursor.execute('SELECT robot_id, AVG(temperature) FROM gps_data GROUP BY robot_id')
+    cursor.execute('SELECT robot_id, AVG(temperature) AS average_temperature FROM gps_data GROUP BY robot_id UNION SELECT \'Global Avg\' AS robot_id, AVG(temperature) AS average_temperature FROM gps_data  order by robot_id ASC ')
     temperature_results = cursor.fetchall()
 
-    cursor.execute('SELECT robot_id, AVG(quality_1) FROM gps_data GROUP BY robot_id')
+    cursor.execute('SELECT robot_id, AVG(quality_1) AS average_quality_1 FROM gps_data GROUP BY robot_id UNION SELECT \'Global Avg\' AS robot_id, AVG(quality_1) AS average_quality_1 FROM gps_data order by robot_id ASC')
     quality_1_results = cursor.fetchall()
 
-    cursor.execute('SELECT robot_id, AVG(quality_2) FROM gps_data GROUP BY robot_id')
+    cursor.execute('SELECT robot_id, AVG(quality_2) AS average_quality_2 FROM gps_data GROUP BY robot_id UNION SELECT \'Global Avg\' AS robot_id, AVG(quality_2) AS average_quality_2 FROM gps_data order by robot_id ASC')
     quality_2_results = cursor.fetchall()
 
-    cursor.execute('SELECT robot_id, AVG(quality_3) FROM gps_data GROUP BY robot_id')
+    cursor.execute('SELECT robot_id, AVG(quality_3) AS average_quality_3 FROM gps_data GROUP BY robot_id UNION SELECT \'Global Avg\' AS robot_id, AVG(quality_3) AS average_quality_3 FROM gps_data order by robot_id ASC')
     quality_3_results = cursor.fetchall()
 
     temperature_x = []
@@ -206,22 +206,22 @@ def index():
     # )
 
     # bgraph_data = bfig.to_html(full_html=False)
-    bfig = make_subplots(rows=2, cols=2, subplot_titles=[
-        'Average Temperature',
+    bfig = make_subplots(rows=3, cols=1, subplot_titles=[
+        # 'Average Temperature',
         'Average Quality 1',
         'Average Quality 2',
         'Average Quality 3'
     ])
 
-    bfig.add_trace(go.Bar(x=temperature_x, y=temperature_y, name='Average Temperature'), row=1, col=1)
-    bfig.add_trace(go.Bar(x=quality_1_x, y=quality_1_y, name='Average Quality 1'), row=1, col=2)
+    # bfig.add_trace(go.Bar(x=temperature_x, y=temperature_y, name='Average Temperature'), row=1, col=1)
+    bfig.add_trace(go.Bar(x=quality_1_x, y=quality_1_y, name='Average Quality 1'), row=1, col=1)
     bfig.add_trace(go.Bar(x=quality_2_x, y=quality_2_y, name='Average Quality 2'), row=2, col=1)
-    bfig.add_trace(go.Bar(x=quality_3_x, y=quality_3_y, name='Average Quality 3'), row=2, col=2)
+    bfig.add_trace(go.Bar(x=quality_3_x, y=quality_3_y, name='Average Quality 3'), row=3, col=1)
 
     bfig.update_layout(
-        height=600,
-        width=1850,
-        title_text='Average Values for Temperature and Quality Metrics',
+        height=950,
+        width=635,
+        title_text='Average Values for Quality Metrics',
         showlegend=False
     )
 
@@ -236,7 +236,7 @@ def index():
 
 
 
-    query = "SELECT * FROM gps_data ORDER BY id DESC "
+    query = "SELECT * FROM gps_data ORDER BY id DESC LIMIT 50 "
     data = pd.read_sql(query, connection)
 
     plot_data = generate_plot(data)
