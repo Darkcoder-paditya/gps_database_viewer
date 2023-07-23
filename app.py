@@ -17,6 +17,12 @@ from plotly.subplots import make_subplots
 import numpy as np
 import plotly.graph_objects as go
 from flask import render_template_string
+from flask import Flask, render_template
+# import mysql.connector
+# import matplotlib.pyplot as plt
+from matplotlib.patches import Patch
+import mpld3
+
 
 app = Flask(__name__, static_folder='static')
 
@@ -34,6 +40,12 @@ MYSQL_PORT = 3306
 MYSQL_DB = 'gps_data'
 MYSQL_USER = 'root'
 MYSQL_PASSWORD = 'root'
+
+quality_cutoffs = {
+    'quality_1': 20,
+    'quality_2': 30,
+    'quality_3': 50
+}
 
 
 @app.route('/delete', methods=['DELETE'])
@@ -102,7 +114,6 @@ def generate_plot(data):
 
     fig.add_trace(go.Scatter(
         x=data.iloc[:, 0], y=data.iloc[:, 7], name='Quality 1'))
-        
 
     fig.add_trace(go.Scatter(
         x=data.iloc[:, 0], y=data.iloc[:, 8], name='Quality 2'))
@@ -127,6 +138,7 @@ def generate_plot(data):
         font_color="rgb(138, 228, 255)",
         title_font_family="Times New Roman",
         title_font_color="rgb(138, 228, 255)",
+        font_size=20,
     )
 
     plot_html = fig.to_html(full_html=False, include_plotlyjs='cdn')
@@ -221,34 +233,105 @@ def index():
     ])
 
     # bfig.add_trace(go.Bar(x=temperature_x, y=temperature_y, name='Average Temperature'), row=1, col=1)
-    bfig.add_trace(go.Bar(x=quality_1_x, y=quality_1_y, name='Average Quality 1'), row=1, col=1)
-    bfig.add_trace(go.Bar(x=quality_2_x, y=quality_2_y, name='Average Quality 2'), row=2, col=1)
-    bfig.add_trace(go.Bar(x=quality_3_x, y=quality_3_y, name='Average Quality 3'), row=3, col=1)
+    bfig.add_trace(go.Bar(x=quality_1_x, y=quality_1_y,
+                   name='Average Quality 1'), row=1, col=1)
+    bfig.add_trace(go.Bar(x=quality_2_x, y=quality_2_y,
+                   name='Average Quality 2'), row=2, col=1)
+    bfig.add_trace(go.Bar(x=quality_3_x, y=quality_3_y,
+                   name='Average Quality 3'), row=3, col=1)
 
     bfig.update_layout(
         height=950,
         width=635,
         title_text='Average Values for Quality Metrics',
-        showlegend=True,
+        showlegend=False,
         paper_bgcolor='rgb(22, 40, 88)',
         plot_bgcolor='rgb(22, 40, 88)',
         font_family="Courier New",
+        font_size=20,
+
         font_color="rgb(138, 228, 255)",
         title_font_family="Times New Roman",
         title_font_color="rgb(138, 228, 255)",
-        legend_title_font_color="rgb(138, 228, 255)"
+        # title_font_size=20,
+        title={
+
+            'font': {'size': 20}
+        }
+        # legend_title_font_color="rgb(138, 228, 255)",
+        # legend_title_font_size=20,
     )
-
     bargraph_data = bfig.to_html(full_html=False)
-
     # Close the database connection
     # connection.close()
 
+    # _________________________________________________________________________________________
+
+    fig, axs = plt.subplots(1, 3, figsize=(17, 6), subplot_kw={'aspect': 'equal'})
+
+    for i, quality in enumerate(quality_cutoffs.keys()):
+        ax = axs[i]
+        ax.set_title(quality.capitalize(), fontsize=20, color= '#8ae4ff', fontweight='bold')
+
+        cursor.execute(f"SELECT robot_id, {quality} FROM gps_data ORDER BY robot_id ASC")
+        rows = cursor.fetchall()
+
+        filtered_values = [row for row in rows if row[1] > quality_cutoffs[quality]]
+
+        unique_robot_ids = list(set(row[0] for row in filtered_values))
+        robot_counts = [sum(1 for row in filtered_values if row[0] == robot_id) for robot_id in unique_robot_ids]
+
+        num_robot_ids = len(unique_robot_ids)
+        radii = [0.3 + i * 0.2 for i in range(num_robot_ids)]  # Increase the radius values for larger circles
+        labels = unique_robot_ids
+
+        legend_labels = []
+        legend_handles = []
+        legend_notations = []
+
+        colors = plt.cm.get_cmap('tab20')(range(num_robot_ids))
+
+        wedge_width = 1 / num_robot_ids
+
+        for radius, label, count, color in zip(radii, labels, robot_counts, colors):
+            if count > 0:
+                percentage = (count / len(filtered_values)) * 100
+                notation = f"{percentage:.1f}%"
+                wedgeprops = {'width': wedge_width, 'edgecolor': 'w'}
+                wedges, _ = ax.pie([count, len(filtered_values) - count], labels=['', ''],
+                                    radius=radius, colors=[color, 'lightgray'],
+                                    wedgeprops=wedgeprops)
+                legend_labels.append(label)
+                legend_handles.append(Patch(facecolor=color, edgecolor='w'))
+                legend_notations.append(notation)
+
+        # Create the legend for the current subplot
+        legend = ax.legend(legend_handles, [f"{label} ({notation})" for label, notation in
+                                            zip(legend_labels, legend_notations)],
+                            loc='upper right', bbox_to_anchor=(0.69, 0), facecolor = '#162858', labelcolor='#8ae4ff')
+
+        # Add the legend to the subplot
+        ax.add_artist(legend)
+        ax.set_facecolor("#11224e")
+
+    plt.subplots_adjust(wspace=0.8)  # Adjust the spacing between subplots
+    html_string = mpld3.fig_to_html(fig)
+    # plt.savefig('static/temp_file5.png')  # Save the plot as a static file
+    # Create a buffer to store the plot image
+    # buffer = io.BytesIO()
+
+    # # Save the plot to the buffer
+    # plt.savefig(buffer, format='png')
+    # buffer.seek(0)
+
+    # # Convert the plot image to a base64-encoded string
+    # pie_data = base64.b64encode(buffer.getvalue()).decode('utf-8')
+
+# Generate the HTML code to embed the plot
 
 
 
-
-
+    # _________________________________________________________________________________________
 
     query = "SELECT * FROM gps_data ORDER BY id DESC LIMIT 50 "
     data = pd.read_sql(query, connection)
@@ -277,7 +360,7 @@ def index():
                            temperature_mean=temperature_mean, temperature_median=temperature_median,
                            temperature_mode=temperature_mode, quality_1_mode=quality_1_mode, quality_1_median=quality_1_median, quality_1_mean=quality_1_mean,
                            quality_3_mode=quality_3_mode, quality_3_median=quality_3_median, quality_3_mean=quality_3_mean,
-                           bargraph_data=bargraph_data)
+                           bargraph_data=bargraph_data, html_string=html_string)
 
 
 if __name__ == '__main__':
